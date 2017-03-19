@@ -1,3 +1,7 @@
+# --*-- encoding:utf-8 --*--
+
+__author__ = 'sai27'
+
 import time, uuid
 
 from orm import Model, StringField, BooleanField, FloatField, TextField

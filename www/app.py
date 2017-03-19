@@ -1,4 +1,7 @@
 # --*-- encoding:utf-8 --*--
+
+__author__ = 'sai27'
+
 import logging; logging.basicConfig(level=logging.INFO)
 import asyncio, os, json, time
 from datetime import datetime
@@ -23,8 +26,8 @@ async def init(loop):
         db = 'blog'
     )
     
-    #u = User(name='Test', email='test@example.com', passwd='1234567890', image='about:blank')
-    #await u.save()
+    u = User(name='Test', email='test@example.com', passwd='1234567890', image='about:blank')
+    await u.save()
     
     print('server started')
     return srv

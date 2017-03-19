@@ -1,3 +1,7 @@
+# --*-- encoding:utf-8 --*--
+
+__author__ = 'sai27'
+
 import aiomysql, asyncio
 import logging; logging.basicConfig(level=logging.INFO)
 
