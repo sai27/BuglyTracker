@@ -148,7 +148,7 @@ function toSmartDate(timestamp) {
     var
         today = new Date(g_time),
         now = today.getTime(),
-        s = '1分钟前',
+        s = '1分钟前',
         t = now - timestamp;
     if (t > 604800000) {
         // 1 week ago:

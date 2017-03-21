@@ -1,6 +1,8 @@
-import inspect
+import inspect, asyncio
+from aiohttp import web
 
-def test( d, a = 5, *args, b, **kw ):
+
+def test( *args, d, a = 5,  b, **kw ):
     print('test')
     print('a=', a)
     print('args')
@@ -28,7 +30,9 @@ for name, param in params.items():
     print(param.name,param.kind, param.annotation, param.default)
     
     
-test( 'aaa', 3, 4, b= 't', **{'c':{'c':5 }})
+#test( 'aaa', 3, 4, b= 't', **{'c':{'c':5 }})
 
-a = not True and False
-print(a)
+#a = not True and False
+#print(a)
+
+
