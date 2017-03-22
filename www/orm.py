@@ -29,7 +29,7 @@ async def select(sql, args, size=None):
     global __pool
     with await __pool as conn:
         cur = await conn.cursor(aiomysql.DictCursor)
-        await cur.execute(sql.replace('?','%s'), args or ())
+        await cur.execute(sql.replace('?', '%s'), args or ())
         if size:
             rs = await cur.fetchmany(size)
         else:
@@ -177,8 +177,8 @@ class Model(dict, metaclass=ModelMetaclass):
                 sql.append('?')
                 args.append(limit)
             elif isinstance(limit, tuple) and len(limit) == 2:
-                sql.append('?,?')
-                args.append(limit)
+                sql.append('?, ?')
+                args.extend(limit)
             else:
                 raise ValueError('Invalid limit value: %s'% str(limit))
         

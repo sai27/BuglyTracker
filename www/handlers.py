@@ -72,17 +72,56 @@ async def cookie2user(cookie_str):
         
 @get('/')
 async def index(*, page='1'):
-    page_index = get_page_index(page)
+    '''page_index = get_page_index(page)
     num = await Blog.findNumber('count(id)')
     page = Page(num)
     if num == 0:
         blogs = []
     else:
-        blogs = await Blog.findAll(orderBy='created_at desc', limit=(page.offset, page.limit))
+        print(page)
+        blogs = await Blog.findAll(orderBy='created_at desc', limit=(page.offset, page.limit))'''
+    print('page:',page)
     return {
-        '__template__': 'blogs.html',
-        'page': page,
-        'blogs': blogs
+        '__template__': 'issues.html',
+        'pages': 50,
+        'cur_page':int(page),
+        'issues': [
+            { 'id' : 10001, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
+            { 'id' : 10002, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '已解决' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' }
+        ]
+    }
+    
+@get('/claim')
+async def claim(*, page='1'):
+    return {
+        '__template__': 'issues.html',
+        'pages': 50,
+        'cur_page':int(page),
+        'issues': [
+            { 'id' : 10011, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10012, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10013, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' }
+        ]
+    }
+    
+@get('/my')
+async def my(*, page='1'):
+    return {
+        '__template__': 'issues.html',
+        'pages': 50,
+        'cur_page':int(page),
+        'issues': [
+            { 'id' : 10021, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
+            { 'id' : 10022, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
+            { 'id' : 10023, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' }
+        ]
+    }
+
+@get('/issue/{id}')
+async def issue(id):
+    return {
+        '__template__': 'issue_detail.html'
     }
     
 @get('/register')

@@ -430,8 +430,20 @@ $(function () {
 });
 
 $(function() {
-    if (location.pathname === '/' || location.pathname.indexOf('/blog')===0) {
-        $('li[data-url=blogs]').addClass('uk-active');
+    if (location.pathname === '/' || location.pathname.indexOf('/issues')===0) {
+        $('li[data-url=issues]').addClass('uk-active');
+    }
+});
+
+$(function() {
+    if (location.pathname.indexOf('/claim')===0) {
+        $('li[data-url=claim]').addClass('uk-active');
+    }
+});
+
+$(function() {
+    if (location.pathname.indexOf('/my')===0) {
+        $('li[data-url=my]').addClass('uk-active');
     }
 });
 

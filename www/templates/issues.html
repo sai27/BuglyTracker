@@ -1,0 +1,58 @@
+{% extends '__base__.html' %}
+
+{% block title %}全部任务{% endblock %}
+
+{% block beforehead %}
+
+<script>
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="uk-width-1-1" >
+        <table class="uk-table uk-table-hover">
+            <thead>
+                <tr>
+                    <th class="uk-width-1-10">编号</th>
+                    <th class="uk-width-6-10">摘要</th>
+                    <th class="uk-width-1-10">版本号</th>
+                    <th class="uk-width-1-10">处理人</th>
+                    <th class="uk-width-2-10">状态</th>
+                </tr>
+            </thead>
+            <tbody>
+              {% for issue in issues %}
+              <tr>
+                <td>
+                    <a href='/issue/{{issue.id}}'>{{issue.id}}</a>
+                </td>
+                <td>
+                    <a href='/issue/{{issue.id}}'>{{issue.text}}</a>
+                </td>
+                <td>
+                    <span> {{issue.version}}</span>
+                </td>
+                <td>
+                    <span> {{issue.user_name}}</span>
+                </td>
+                <td>
+                    <span> {{issue.status}}</span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+        
+        <ul class="uk-pagination">
+        {% for idx in range(0,pages) %}
+            {% if idx+1 == cur_page %}
+            <li class="uk-active"><span>{{idx+1}}</span></li>
+            {% else %}
+            <li ><a href='?page={{idx+1}}'>{{idx+1}}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
