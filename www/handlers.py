@@ -86,7 +86,7 @@ async def index(*, page='1'):
         'pages': 50,
         'cur_page':int(page),
         'issues': [
-            { 'id' : 10001, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
+            { 'id' : 10001, 'text' : 'failed call lua function : [string \"gui/supermarket/ui_sub_activity_hy.bytes\"]:316: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
             { 'id' : 10002, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '已解决' },
             { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
             { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
@@ -182,7 +182,14 @@ stack traceback:
 	[string "libs/net/lua_net.bytes"]:55: in function <[string "libs/net/lua_net.bytes"]:51>"''',
         'version' : '2.6.20170203', 
         'user_name' : '于静波', 
-        'status' : '处理中'
+        'status' : '处理中',
+        'devices' : [
+            '00_20_5D_9D_BE_12_72_12_CA_32_CD_8F_8E_85_11_16',
+            '00_20_5D_9D_BE_12_72_12_CA_32_CD_8F_8E_85_11_17',
+            '00_20_5D_9D_BE_12_72_12_CA_32_CD_8F_8E_85_11_18',
+            '00_20_5D_9D_BE_12_72_12_CA_32_CD_8F_8E_85_11_19',
+            '00_20_5D_9D_BE_12_72_12_CA_32_CD_8F_8E_85_11_20',
+        ]
     }
     
 @get('/register')

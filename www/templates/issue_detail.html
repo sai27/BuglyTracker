@@ -44,11 +44,17 @@
                 </textarea>
             </div>
         </div>
+        {% for device in devices %}
+        <a href="{{device}}"> <div class="uk-text-primary uk-text-bold">下载原始文件:{{device}}</div> </a>
+        {% endfor %}
         {% if __user__ %}
-        <a href="{{file}}"> <div class="uk-text-primary uk-text-bold">下载原始文件</div> </a>
         <div class="uk-form-row">
+            {% if status == "处理中" %}
             <button class="uk-button uk-button-primary"><i class="uk-icon-check"></i> 解决</button>
-            <a href="/manage/blogs" class="uk-button"><i class="uk-icon-times"></i> 放弃</a>
+            <button class="uk-button"><i class="uk-icon-times"></i> 放弃</button>
+            {% else %}
+            <button class="uk-button uk-button-success"><i class="uk-icon-check"></i> 领取</button>
+            {% endif %}
         </div>
         {% endif %}
     </div>
