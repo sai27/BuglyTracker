@@ -12,12 +12,12 @@ import re, time, json, logging, hashlib, base64, asyncio
 from aiohttp import web
 
 from coroweb import get, post
-from apis import Page, APIValueError, APIResourceNotFoundError
+from apis import APIValueError, APIResourceNotFoundError
 
 from models import User, Comment, Blog, next_id
 from config import configs
 
-COOKIE_NAME = 'awesession'
+COOKIE_NAME = 'buglytracker_session'
 _COOKIE_KEY = configs.session.secret
 
 def check_admin(request):
@@ -80,11 +80,10 @@ async def index(*, page='1'):
     else:
         print(page)
         blogs = await Blog.findAll(orderBy='created_at desc', limit=(page.offset, page.limit))'''
-    print('page:',page)
     return {
         '__template__': 'issues.html',
         'pages': 50,
-        'cur_page':int(page),
+        'cur_page':get_page_index(page),
         'issues': [
             { 'id' : 10001, 'text' : 'failed call lua function : [string \"gui/supermarket/ui_sub_activity_hy.bytes\"]:316: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
             { 'id' : 10002, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '已解决' },
@@ -114,7 +113,7 @@ async def claim(*, page='1'):
     return {
         '__template__': 'issues.html',
         'pages': 50,
-        'cur_page':int(page),
+        'cur_page':get_page_index(page),
         'issues': [
             { 'id' : 10011, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
             { 'id' : 10012, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
@@ -127,7 +126,7 @@ async def my(*, page='1'):
     return {
         '__template__': 'issues.html',
         'pages': 50,
-        'cur_page':int(page),
+        'cur_page':get_page_index(page),
         'issues': [
             { 'id' : 10021, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
             { 'id' : 10022, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
