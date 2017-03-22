@@ -88,6 +88,53 @@ async def index(*, page='1'):
         'issues': [
             { 'id' : 10001, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
             { 'id' : 10002, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '已解决' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10001, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
+            { 'id' : 10002, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '已解决' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
+            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
             { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' }
         ]
     }
@@ -121,7 +168,21 @@ async def my(*, page='1'):
 @get('/issue/{id}')
 async def issue(id):
     return {
-        '__template__': 'issue_detail.html'
+        '__template__': 'issue_detail.html',
+        'id':100001,
+        'text':'''"failed call lua function : [string "gui/supermarket/ui_sub_activity_hy.bytes"]:316: attempt to index a nil value
+stack traceback:
+	[string "gui/supermarket/ui_sub_activity_hy.bytes"]:316: in function 'SetItemInfo'
+	[string "gui/supermarket/ui_sub_activity_hy.bytes"]:457: in function 'RefreshUI'
+	[string "gui/supermarket/ui_sub_activity_hy.bytes"]:895: in function 'callback'
+	[string "libs/sig/lua_sig.bytes"]:35: in function 'fn'
+	[string "libs/sig/lua_sig.bytes"]:169: in function 'InvokePerson'
+	[string "game/data/lua_data_ach.bytes"]:410: in function 'SetAchieve'
+	[string "game/data/lua_data_notify.bytes"]:188: in function 'callback'
+	[string "libs/net/lua_net.bytes"]:55: in function <[string "libs/net/lua_net.bytes"]:51>"''',
+        'version' : '2.6.20170203', 
+        'user_name' : '于静波', 
+        'status' : '处理中'
     }
     
 @get('/register')
