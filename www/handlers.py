@@ -14,7 +14,7 @@ from aiohttp import web
 from coroweb import get, post
 from apis import APIValueError, APIResourceNotFoundError
 
-from models import User, Comment, Blog, next_id
+from models import User, Issue, Crash, next_id
 from config import configs
 
 COOKIE_NAME = 'buglytracker_session'
@@ -72,94 +72,132 @@ async def cookie2user(cookie_str):
         
 @get('/')
 async def index(*, page='1'):
-    '''page_index = get_page_index(page)
-    num = await Blog.findNumber('count(id)')
-    page = Page(num)
-    if num == 0:
-        blogs = []
-    else:
-        print(page)
-        blogs = await Blog.findAll(orderBy='created_at desc', limit=(page.offset, page.limit))'''
+    users = await User.findAll()
+    count = await Issue.findNumber('count(id)')
+    cur_page = get_page_index(page)
+    pages = count // 50 + 1
+    
+    items = await Issue.findAll(where = 'id >= %d AND id <= %d'%((cur_page-1)*50+1, cur_page*50))
+    issues = list()
+    for item in items:
+        issue = dict()
+        issue['id']         = item.id
+        issue['text']       = item.title
+        issue['version']    = item.version
+        if item.user_id == None:
+            issue['user_name']  = "无"
+            issue['status']     = "未处理"
+        else:
+            name = '无'
+            for user in users:
+                if user.id == item.user_id:
+                    name = user.name
+                    break  
+            issue['user_name']  = name
+            if item.status == 0:
+                issue['status']     = "处理中"
+            elif item.status == 1:
+                issue['status']     = "已解决"
+        issues.append(issue)
+        
     return {
         '__template__': 'issues.html',
-        'pages': 50,
-        'cur_page':get_page_index(page),
-        'issues': [
-            { 'id' : 10001, 'text' : 'failed call lua function : [string \"gui/supermarket/ui_sub_activity_hy.bytes\"]:316: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
-            { 'id' : 10002, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '已解决' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10003, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' }
-        ]
+        'pages': pages,
+        'cur_page':cur_page,
+        'issues': issues
     }
     
 @get('/claim')
 async def claim(*, page='1'):
+    users = await User.findAll()
+    count = await Issue.findNumber('count(id)', where='user_id IS NULL')
+    cur_page = get_page_index(page)
+    pages = count // 50 + 1
+    
+    items = await Issue.findAll(where = 'id >= %d AND id <= %d AND user_id IS NULL'%((cur_page-1)*50+1, cur_page*50))
+    issues = list()
+    for item in items:
+        issue = dict()
+        issue['id']         = item.id
+        issue['text']       = item.title
+        issue['version']    = item.version
+        issue['user_name']  = "无"
+        issue['status']     = "未处理"
+        issues.append(issue)
+        
     return {
         '__template__': 'issues.html',
-        'pages': 50,
-        'cur_page':get_page_index(page),
-        'issues': [
-            { 'id' : 10011, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10012, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' },
-            { 'id' : 10013, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '无', 'status' : '未处理' }
-        ]
+        'pages': pages,
+        'cur_page':cur_page,
+        'issues': issues
     }
     
 @get('/my')
-async def my(*, page='1'):
+async def my(request, *, page='1'):
+    users = await User.findAll()
+    count = await Issue.findNumber('count(id)', where=r"`user_id` = '%s'"%request.__user__.id )
+    cur_page = get_page_index(page)
+    pages = count // 50 + 1
+    
+    items = await Issue.findAll(where = r"`id` >= %d AND `id` <= %d AND `user_id` = '%s'"%((cur_page-1)*50+1, cur_page*50, request.__user__.id))
+    issues = list()
+    for item in items:
+        issue = dict()
+        issue['id']         = item.id
+        issue['text']       = item.title
+        issue['version']    = item.version
+        issue['user_name']  = request.__user__.name
+        if item.status == 0:
+            issue['status']     = "处理中"
+        elif item.status == 1:
+            issue['status']     = "已解决"
+        issues.append(issue)
+        
     return {
         '__template__': 'issues.html',
-        'pages': 50,
-        'cur_page':get_page_index(page),
-        'issues': [
-            { 'id' : 10021, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
-            { 'id' : 10022, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' },
-            { 'id' : 10023, 'text' : 'PCall failed : [string \"game/data/lua_data_ach.bytes\"]:533: attempt to index a nil value', 'version' : '2.6.20170203', 'user_name' : '于静波', 'status' : '处理中' }
-        ]
+        'pages': pages,
+        'cur_page':cur_page,
+        'issues': issues
     }
 
 @get('/issue/{id}')
 async def issue(id):
+    users = await User.findAll()
+    issue = await Issue.find(id)
+    
+    if issue.user_id == None:
+        user_name  = "无"
+        status     = "未处理"
+    else:
+        name = '无'
+        for user in users:
+            if user.id == issue.user_id:
+                name = user.name
+                break  
+        user_name  = name
+        if issue.status == 0:
+            status = "处理中"
+        elif issue.status == 1:
+            status = "已解决"
+                
+    crashs = await Crash.findAll(where = 'issue_id = %s'%id)
+    devices = []
+    for crash in crashs:
+        devices.append(crash.id)
+        
     return {
         '__template__': 'issue_detail.html',
-        'id':100001,
-        'text':'''"failed call lua function : [string "gui/supermarket/ui_sub_activity_hy.bytes"]:316: attempt to index a nil value
-stack traceback:
-	[string "gui/supermarket/ui_sub_activity_hy.bytes"]:316: in function 'SetItemInfo'
-	[string "gui/supermarket/ui_sub_activity_hy.bytes"]:457: in function 'RefreshUI'
-	[string "gui/supermarket/ui_sub_activity_hy.bytes"]:895: in function 'callback'
-	[string "libs/sig/lua_sig.bytes"]:35: in function 'fn'
-	[string "libs/sig/lua_sig.bytes"]:169: in function 'InvokePerson'
-	[string "game/data/lua_data_ach.bytes"]:410: in function 'SetAchieve'
-	[string "game/data/lua_data_notify.bytes"]:188: in function 'callback'
-	[string "libs/net/lua_net.bytes"]:55: in function <[string "libs/net/lua_net.bytes"]:51>"''',
-        'version' : '2.6.20170203', 
-        'user_name' : '于静波', 
-        'status' : '处理中',
-        'devices' : [
-            '00_20_5D_9D_BE_12_72_12_CA_32_CD_8F_8E_85_11_16',
-            '00_20_5D_9D_BE_12_72_12_CA_32_CD_8F_8E_85_11_17',
-            '00_20_5D_9D_BE_12_72_12_CA_32_CD_8F_8E_85_11_18',
-            '00_20_5D_9D_BE_12_72_12_CA_32_CD_8F_8E_85_11_19',
-            '00_20_5D_9D_BE_12_72_12_CA_32_CD_8F_8E_85_11_20',
-        ]
+        'id':issue.id,
+        'text':issue.content,
+        'version' : issue.version,
+        'user_name' : user_name,
+        'status' : status,
+        'devices' : devices
     }
+    
+@post('/device/{id}')
+async def device(id):
+    pass
     
 @get('/register')
 def register():
@@ -222,7 +260,7 @@ async def api_register_user(*, email, name, passwd):
         raise APIError('register:failed', 'email', 'Email is already in use.')
     uid = next_id()
     sha1_passwd = '%s:%s' % (uid, passwd)
-    user = User(id=uid, name=name.strip(), email=email, passwd=hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest(), image='http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest())
+    user = User(id=uid, name=name.strip(), email=email, passwd=hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest())
     await user.save()
     # make session cookie:
     r = web.Response()
