@@ -161,25 +161,38 @@ async def my(request, *, page='1'):
     }
 
 @get('/issue/{id}')
-async def issue(id):
+async def issue(request, *, id):
     users = await User.findAll()
     issue = await Issue.find(id)
     
     if issue.user_id == None:
-        user_name  = "无"
-        status     = "未处理"
+        user_name   = "无"
+        status      = "未处理"
+        if request.__user__ == None:
+            handle_type = 3
+        else:
+            handle_type = 0
     else:
-        name = '无'
-        for user in users:
-            if user.id == issue.user_id:
-                name = user.name
-                break  
-        user_name  = name
-        if issue.status == 0:
-            status = "处理中"
-        elif issue.status == 1:
-            status = "已解决"
-                
+        if request.__user__ == None or issue.user_id != request.__user__.id:
+            user_name = '无'
+            handle_type = 3
+            if issue.status == 0:
+                status = "处理中"
+            elif issue.status == 1:
+                status = "已解决"
+            for user in users:
+                if user.id == issue.user_id:
+                    user_name = user.name
+                    break  
+        else:
+            user_name = request.__user__.name
+            if issue.status == 0:
+                status = "处理中"
+                handle_type = 1
+            elif issue.status == 1:
+                status = "已解决"
+                handle_type = 2
+        
     crashs = await Crash.findAll(where = 'issue_id = %s'%id)
     devices = []
     for crash in crashs:
@@ -192,12 +205,32 @@ async def issue(id):
         'version' : issue.version,
         'user_name' : user_name,
         'status' : status,
+        'handle_type' : handle_type,
         'devices' : devices
     }
     
-@post('/device/{id}')
-async def device(id):
-    pass
+@get('/api/crashdoc/{id}')
+async def crashdoc(*, id):
+    id = id[:-14]
+    print(id)
+    crash = await Crash.find(id)
+    if crash == None:
+        raise APIValueError('crash_id', '没有找到对应crash文件')
+        
+    bytes = crash.crash_doc.encode('utf-8')
+    print ('bytes', type(bytes))
+    return bytes
+    
+@get('/api/appdetail/{id}')
+async def appdetail(*, id):
+    id = id[:-15]
+    crash = await Crash.find(id)
+    if crash == None:
+        raise APIValueError('crash_id', '没有找到对应crash文件')
+        
+    bytes = crash.app_detail.encode('utf-8')
+    print ('bytes', type(bytes))
+    return bytes
     
 @get('/register')
 def register():
@@ -269,3 +302,49 @@ async def api_register_user(*, email, name, passwd):
     r.content_type = 'application/json'
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
     return r
+    
+@post('/api/issue_op')
+async def api_issue_op(request, *, issue_id, op):
+    if op == None:
+        raise APIValueError('op', 'op为空')
+    
+    if not isinstance(op, int):
+        raise APIValueError('op', '找不到状态信息')
+        
+    if not request.__user__:
+        raise APIValueError('op', '请先登录')
+        
+    issue = await Issue.find(issue_id)
+    
+    print(type(issue))
+    if not issue:
+        raise APIValueError('op', '找不到issue')
+        
+    # 领取
+    if op == 0:
+        if issue.user_id == None:
+            issue.user_id = request.__user__.id
+            issue.status = 0
+            await issue.update()
+        else:
+            raise APIValueError('op', 'issue状态有变化，请刷新页面')
+    # 解决
+    elif op == 1:
+        if issue.user_id == request.__user__.id:
+            issue.status = 1
+            await issue.update()
+    # 放弃
+    elif op == 2:
+        if issue.user_id == request.__user__.id:
+            issue.user_id = None
+            issue.status = 0
+            await issue.update()
+    # 重开
+    elif op == 3:
+        if issue.user_id == request.__user__.id:
+            issue.status = 0
+            await issue.update()
+    
+    return { 'status' : 200 }
+    
+    

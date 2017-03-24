@@ -80,7 +80,7 @@ async def response_factory(app, handler):
             return r
         if isinstance(r, bytes):
             resp = web.Response(body=r)
-            resp.content_type = 'application/octet-stream'
+            resp.content_type = 'image/psd'
             return resp
         if isinstance(r, str):
             if r.startswith('redirect:'):
@@ -100,11 +100,11 @@ async def response_factory(app, handler):
                 resp.content_type = 'text/html;charset=utf-8'
                 return resp
         if isinstance(r, int) and r >= 100 and r < 600:
-            return web.Response(r)
+            return web.Response(status=r)
         if isinstance(r, tuple) and len(r) == 2:
             t, m = r
             if isinstance(t, int) and t >= 100 and t < 600:
-                return web.Response(t, str(m))
+                return web.Response(status=t, reason=str(m))
         # default:
         resp = web.Response(body=str(r).encode('utf-8'))
         resp.content_type = 'text/plain;charset=utf-8'

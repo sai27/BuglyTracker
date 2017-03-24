@@ -5,6 +5,66 @@
 {% block beforehead %}
 
 <script>
+$(function () {
+    var vm = new Vue({
+        el : '#vm',
+        data : {
+        },
+        methods : {
+            on_get : function() {
+                var $form = $('#vm');
+                $form.postJSON('/api/issue_op', {
+                    issue_id : {{id}},
+                    op : 0
+                }, function (err, r) {
+                    if (err) {
+                        return $form.showFormError(err);
+                    }
+                    return location.reload();
+                });
+            },
+            on_solve : function() {
+                var $form = $('#vm');
+                $form.postJSON('/api/issue_op', {
+                    issue_id : {{id}},
+                    op : 1
+                }, function (err, r) {
+                    if (err) {
+                        return $form.showFormError(err);
+                    }
+                    console.log('fuck')
+                    return location.reload();
+                });
+            },
+            on_giveup : function() {
+                var $form = $('#vm');
+                $form.postJSON('/api/issue_op', {
+                    issue_id : {{id}},
+                    op : 2
+                }, function (err, r) {
+                    if (err) {
+                        return $form.showFormError(err);
+                    }
+                    return location.reload();
+                });
+            },
+            on_reopen : function() {
+                var $form = $('#vm');
+                $form.postJSON('/api/issue_op', {
+                    issue_id : {{id}},
+                    op : 3
+                }, function (err, r) {
+                    if (err) {
+                        return $form.showFormError(err);
+                    }
+                    return location.reload();
+                });
+            }
+        }
+    });
+    $('#vm').show();
+})
+
 </script>
 
 {% endblock %}
@@ -35,7 +95,7 @@
         </div>
     </div>
     
-    <div class="uk-width-1-1 uk-form uk-form-stacked">
+    <form id ="vm" class="uk-width-1-1 uk-form uk-form-stacked">
         <div class="uk-form-row">
             <label class="uk-form-label">出错内容:</label>
             <div class="uk-form-controls">
@@ -45,19 +105,24 @@
             </div>
         </div>
         {% for device in devices %}
-        <a href="{{device}}"> <div class="uk-text-primary uk-text-bold">下载原始文件:{{device}}</div> </a>
+        <text class="uk-text-primary uk-text-bold">下载原始文件:{{device}}</text>
+        <a href="/api/crashdoc/{{device}}_crashDoc.json"> <i class="uk-icon-download"></i> CrashDoc </a>
+        <a href="/api/appdetail/{{device}}_appDetail.json"> <i class="uk-icon-download"></i> AppDetail </a>
         {% endfor %}
-        {% if __user__ %}
+        <div class="uk-alert uk-alert-danger uk-hidden"></div>
+        {% if handle_type != 3 %}
         <div class="uk-form-row">
-            {% if status == "处理中" %}
-            <button class="uk-button uk-button-primary"><i class="uk-icon-check"></i> 解决</button>
-            <button class="uk-button"><i class="uk-icon-times"></i> 放弃</button>
-            {% else %}
-            <button class="uk-button uk-button-success"><i class="uk-icon-check"></i> 领取</button>
+            {% if handle_type == 0 %}
+            <button type="submit"type="submit" v-on="click:on_get" class="uk-button uk-button-success"><i class="uk-icon-check"></i> 领取</button>    
+            {% elif handle_type == 1 %}
+            <button type="submit" v-on="click:on_solve" class="uk-button uk-button-primary"><i class="uk-icon-check"></i> 解决</button>
+            <button type="submit" v-on="click:on_giveup" class="uk-button"><i class="uk-icon-times"></i> 放弃</button>
+            {% elif handle_type == 2 %}
+            <button type="submit" v-on="click:on_reopen" class="uk-button uk-button-primary"><i class="uk-icon-check"></i> 重开</button>
             {% endif %}
         </div>
         {% endif %}
-    </div>
+    </form>
     
     <!--<div id="loading" class="uk-width-1-1 uk-text-center">
         <span><i class="uk-icon-spinner uk-icon-medium uk-icon-spin"></i> 正在加载...</span>
