@@ -18,5 +18,6 @@ configs = {
     },
     'session': {
         'secret': 'bugly'
-    }
+    },
+    'page' : 20
 }

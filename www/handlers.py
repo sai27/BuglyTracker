@@ -7,6 +7,7 @@ __author__ = 'sai27'
 
 import re, time, json, logging, hashlib, base64, asyncio
 
+import orm
 #import markdown2
 
 from aiohttp import web
@@ -75,9 +76,9 @@ async def index(*, page='1'):
     users = await User.findAll()
     count = await Issue.findNumber('count(id)')
     cur_page = get_page_index(page)
-    pages = count // 50 + 1
+    pages = count // configs.page + 1
     
-    items = await Issue.findAll(where = 'id >= %d AND id <= %d'%((cur_page-1)*50+1, cur_page*50))
+    items = await Issue.findAll( limit=((cur_page-1)*configs.page, configs.page))
     issues = list()
     for item in items:
         issue = dict()
@@ -112,9 +113,9 @@ async def claim(*, page='1'):
     users = await User.findAll()
     count = await Issue.findNumber('count(id)', where='user_id IS NULL')
     cur_page = get_page_index(page)
-    pages = count // 50 + 1
+    pages = count // configs.page + 1
     
-    items = await Issue.findAll(where = 'id >= %d AND id <= %d AND user_id IS NULL'%((cur_page-1)*50+1, cur_page*50))
+    items = await Issue.findAll(where = 'user_id IS NULL', limit=((cur_page-1)*configs.page, configs.page) )
     issues = list()
     for item in items:
         issue = dict()
@@ -137,9 +138,9 @@ async def my(request, *, page='1'):
     users = await User.findAll()
     count = await Issue.findNumber('count(id)', where=r"`user_id` = '%s'"%request.__user__.id )
     cur_page = get_page_index(page)
-    pages = count // 50 + 1
+    pages = count // configs.page + 1
     
-    items = await Issue.findAll(where = r"`id` >= %d AND `id` <= %d AND `user_id` = '%s'"%((cur_page-1)*50+1, cur_page*50, request.__user__.id))
+    items = await Issue.findAll(where = r"`user_id` = '%s'"%(request.__user__.id), limit=((cur_page-1)*configs.page, configs.page) )
     issues = list()
     for item in items:
         issue = dict()
@@ -193,10 +194,13 @@ async def issue(request, *, id):
                 status = "已解决"
                 handle_type = 2
         
-    crashs = await Crash.findAll(where = 'issue_id = %s'%id)
+    sql = r"SELECT id FROM crashs WHERE issue_id = %s"
+    crashs = await orm.select(sql, [id])
+    #crashs = await Crash.findAll(where = 'issue_id = %s'%id)
     devices = []
+    #print(crashs)
     for crash in crashs:
-        devices.append(crash.id)
+        devices.append(crash['id'])
         
     return {
         '__template__': 'issue_detail.html',
