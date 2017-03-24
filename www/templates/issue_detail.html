@@ -105,9 +105,11 @@ $(function () {
             </div>
         </div>
         {% for device in devices %}
+        <div>
         <text class="uk-text-primary uk-text-bold">下载原始文件:{{device}}</text>
         <a href="/api/crashdoc/{{device}}_crashDoc.json"> <i class="uk-icon-download"></i> CrashDoc </a>
         <a href="/api/appdetail/{{device}}_appDetail.json"> <i class="uk-icon-download"></i> AppDetail </a>
+        </div>
         {% endfor %}
         <div class="uk-alert uk-alert-danger uk-hidden"></div>
         {% if handle_type != 3 %}

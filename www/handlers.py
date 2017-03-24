@@ -346,5 +346,48 @@ async def api_issue_op(request, *, issue_id, op):
             await issue.update()
     
     return { 'status' : 200 }
+ 
+@post('/api/upload')
+async def api_upload(*, name, crashDoc, appDetail):
+    crash = await Crash.find(name)
+    if crash:
+        raise APIValueError('upload', '重复导入:%s'%name)
+        
+    jsonCrashDoc = json.loads(crashDoc)
+    crashMap = jsonCrashDoc.get('crashMap',None)
+    if not crashMap:
+        raise APIValueError('upload', '找不到crashMap:%s'%name)
     
+    version = crashMap.get('productVersion',None)
+    if not version:
+        raise APIValueError('upload', '找不到productVersion:%s'%name)
+        
+    content = crashMap.get('expMessage',None)
+    if not content:
+        raise APIValueError('upload', '找不到expMessage:%s'%name)
+        
+    content = content.replace('\\"', '\"')
+    content = content.replace('\\n', '\n')
+    content = content.replace('\\t', '\t')
+    content_md5 = hashlib.md5(content.encode('utf-8')).hexdigest()
+    length = content.find('\n')
+    if length >= 0:
+        title = content[:length]
+    else:
+        title = content[:]
+        
+    issues = await Issue.findAll(where=r"`content_md5` = '%s' AND `version` = '%s'"%(content_md5, version))
+    if (len(issues) == 1):
+        issue_id = issues[0].id
+    elif(len(issues) == 0):
+        issue_id = await Issue.findNumber('count(id)') + 1
+        issue = Issue(id = issue_id, title = title, content = content, content_md5 = content_md5, version = version,user_id=None, status = 0)
+        await issue.save()
+    else:
+        raise APIValueError('upload', '数据库存储错误%s'%name)
+   
+    crash = Crash(id = name, issue_id = issue_id, crash_doc = crashDoc, app_detail = appDetail)
+    await crash.save()
+    
+    return "success"
     
