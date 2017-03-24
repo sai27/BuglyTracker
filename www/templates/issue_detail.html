@@ -70,25 +70,31 @@ $(function () {
 {% endblock %}
 
 {% block content %}
-    <div class="uk-width-large-1-4">
+    <div class="uk-width-large-1-5">
         <div class="uk-panel uk-panel-box">
             <h3 class="uk-panel-title">编号</h3>
             {{id}}
         </div>
     </div>
-    <div class="uk-width-large-1-4">
+    <div class="uk-width-large-1-5">
+        <div class="uk-panel uk-panel-box">
+            <h3 class="uk-panel-title">发生次数</h3>
+            {{count}}
+        </div>
+    </div>
+    <div class="uk-width-large-1-5">
         <div class="uk-panel uk-panel-box">
             <h3 class="uk-panel-title">版本号</h3>
             {{version}}
         </div>
     </div>
-    <div class="uk-width-large-1-4">
+    <div class="uk-width-large-1-5">
         <div class="uk-panel uk-panel-box">
             <h3 class="uk-panel-title">处理人</h3>
             {{user_name}}
         </div>
     </div>
-    <div class="uk-width-large-1-4">
+    <div class="uk-width-large-1-5">
         <div class="uk-panel uk-panel-box">
             <h3 class="uk-panel-title">状态</h3>
             {{status}}

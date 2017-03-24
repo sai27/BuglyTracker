@@ -81,10 +81,13 @@ async def index(*, page='1'):
     items = await Issue.findAll( limit=((cur_page-1)*configs.page, configs.page))
     issues = list()
     for item in items:
+        sql = r"SELECT COUNT(*) _num_ FROM crashs WHERE issue_id = %s"
+        count = await orm.select(sql, [item.id])
         issue = dict()
         issue['id']         = item.id
         issue['text']       = item.title
         issue['version']    = item.version
+        issue['count']      = count[0]['_num_']
         if item.user_id == None:
             issue['user_name']  = "无"
             issue['status']     = "未处理"
@@ -118,10 +121,13 @@ async def claim(*, page='1'):
     items = await Issue.findAll(where = 'user_id IS NULL', limit=((cur_page-1)*configs.page, configs.page) )
     issues = list()
     for item in items:
+        sql = r"SELECT COUNT(*) _num_ FROM crashs WHERE issue_id = %s"
+        count = await orm.select(sql, [item.id])
         issue = dict()
         issue['id']         = item.id
         issue['text']       = item.title
         issue['version']    = item.version
+        issue['count']      = count[0]['_num_']
         issue['user_name']  = "无"
         issue['status']     = "未处理"
         issues.append(issue)
@@ -143,10 +149,13 @@ async def my(request, *, page='1'):
     items = await Issue.findAll(where = r"`user_id` = '%s'"%(request.__user__.id), limit=((cur_page-1)*configs.page, configs.page) )
     issues = list()
     for item in items:
+        sql = r"SELECT COUNT(*) _num_ FROM crashs WHERE issue_id = %s"
+        count = await orm.select(sql, [item.id])
         issue = dict()
         issue['id']         = item.id
         issue['text']       = item.title
         issue['version']    = item.version
+        issue['count']      = count[0]['_num_']
         issue['user_name']  = request.__user__.name
         if item.status == 0:
             issue['status']     = "处理中"
@@ -193,8 +202,11 @@ async def issue(request, *, id):
             elif issue.status == 1:
                 status = "已解决"
                 handle_type = 2
-        
-    sql = r"SELECT id FROM crashs WHERE issue_id = %s"
+    
+    sql = r"SELECT COUNT(*) _num_ FROM crashs WHERE issue_id = %s"
+    count = await orm.select(sql, [id])
+    #print(count)
+    sql = r"SELECT id FROM crashs WHERE issue_id = %s limit 5"
     crashs = await orm.select(sql, [id])
     #crashs = await Crash.findAll(where = 'issue_id = %s'%id)
     devices = []
@@ -210,7 +222,8 @@ async def issue(request, *, id):
         'user_name' : user_name,
         'status' : status,
         'handle_type' : handle_type,
-        'devices' : devices
+        'devices' : devices,
+        'count' : count[0]['_num_']
     }
     
 @get('/api/crashdoc/{id}')

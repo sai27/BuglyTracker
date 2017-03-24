@@ -16,7 +16,8 @@
             <thead>
                 <tr>
                     <th class="uk-width-1-10">编号</th>
-                    <th class="uk-width-6-10">摘要</th>
+                    <th class="uk-width-5-10">摘要</th>
+                    <th class="uk-width-1-10">发生次数</th>
                     <th class="uk-width-1-10">版本号</th>
                     <th class="uk-width-1-10">处理人</th>
                     <th class="uk-width-2-10">状态</th>
@@ -29,7 +30,16 @@
                     <a href='/issue/{{issue.id}}'>{{issue.id}}</a>
                 </td>
                 <td>
-                    <a href='/issue/{{issue.id}}'>{{issue.text}}</a>
+                    {% if issue.status == "未处理" %}
+                    <a href='/issue/{{issue.id}}' class="uk-text-primary">{{issue.text}}</a>
+                    {% elif issue.status == "处理中" %}
+                    <a href='/issue/{{issue.id}}' class="uk-text-warning">{{issue.text}}</a>
+                    {% elif issue.status == "已解决" %}
+                    <a href='/issue/{{issue.id}}' class="uk-text-success">{{issue.text}}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="uk-text-danger"> {{issue.count}}</span>
                 </td>
                 <td>
                     <span> {{issue.version}}</span>
