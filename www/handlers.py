@@ -72,102 +72,171 @@ async def cookie2user(cookie_str):
         return None
         
 @get('/')
-async def index(*, page='1'):
-    users = await User.findAll()
-    count = await Issue.findNumber('count(id)')
+async def index(**kw):
+    page = kw.get('page', '1')
+    key = kw.get('key', 'id')
+    order = kw.get('order', 'asc')
+    version = kw.get('version', '0')
+    user = kw.get('user', '0')
+    status = kw.get('status', '-1')
+    #AND issues.version = '%s' AND issues.user_id = '%s' AND issues.status = '%s'
+    
+    where = []
+    where.append('issues.id = crashs.issue_id')
+    if version != '0':
+        where.append(r"issues.version = '%s'"%version)
+    if user != '0':
+        where.append(r"issues.user_id = '%s'"%user)
+    
+    if status != '-1':
+        where.append(r"issues.status = '%s'"%status)
+        
+    where = " AND ".join(where)
+    
+    sql = r'''SELECT    COUNT(DISTINCT issues.id)  AS count
+      FROM      issues, crashs 
+      WHERE     %(where_append)s '''%{'where_append':where}
+    
+    raw = await orm.select(sql, None)
+    count = raw[0]['count']
     cur_page = get_page_index(page)
     pages = count // configs.page + 1
     
-    items = await Issue.findAll( limit=((cur_page-1)*configs.page, configs.page))
+    sql = r'''SELECT    issues.id AS id, 
+                issues.title AS title, 
+                COUNT(crashs.id) AS `count`, 
+                issues.version AS `version`, 
+                issues.user_id AS user_id, 
+                issues.status AS `status` 
+      FROM      issues, crashs 
+      WHERE     %(where_append)s 
+      GROUP BY  id 
+      ORDER BY  %(orderby_key)s %(orderby_value)s 
+      LIMIT     %(limit_min)d, %(limit_offset)d''' \
+      % {'where_append':where, 'orderby_key':key, 'orderby_value':order, 'limit_min':0, 'limit_offset':20}
+
+    items = await orm.select(sql, None)
+    
+    sql = "SELECT DISTINCT `version` FROM issues"
+    versions = await orm.select(sql, None)
+    users = await User.findAll()
+
     issues = list()
     for item in items:
-        sql = r"SELECT COUNT(*) _num_ FROM crashs WHERE issue_id = %s"
-        count = await orm.select(sql, [item.id])
         issue = dict()
-        issue['id']         = item.id
-        issue['text']       = item.title
-        issue['version']    = item.version
-        issue['count']      = count[0]['_num_']
-        if item.user_id == None:
+        issue['id']         = item['id']
+        issue['text']       = item['title']
+        issue['version']    = item['version']
+        issue['count']      = item['count']
+        if item['user_id'] == None:
             issue['user_name']  = "无"
-            issue['status']     = "未处理"
         else:
             name = '无'
             for user in users:
-                if user.id == item.user_id:
+                if user.id == item['user_id']:
                     name = user.name
                     break  
             issue['user_name']  = name
-            if item.status == 0:
-                issue['status']     = "处理中"
-            elif item.status == 1:
-                issue['status']     = "已解决"
+            
+        if item['status'] == 0:
+            issue['status']     = "未处理"
+        elif item['status'] == 1:
+            issue['status']     = "处理中"
+        elif item['status'] == 2:
+            issue['status']     = "已解决"
         issues.append(issue)
-        
+    
     return {
         '__template__': 'issues.html',
         'pages': pages,
         'cur_page':cur_page,
-        'issues': issues
-    }
-    
-@get('/claim')
-async def claim(*, page='1'):
-    users = await User.findAll()
-    count = await Issue.findNumber('count(id)', where='user_id IS NULL')
-    cur_page = get_page_index(page)
-    pages = count // configs.page + 1
-    
-    items = await Issue.findAll(where = 'user_id IS NULL', limit=((cur_page-1)*configs.page, configs.page) )
-    issues = list()
-    for item in items:
-        sql = r"SELECT COUNT(*) _num_ FROM crashs WHERE issue_id = %s"
-        count = await orm.select(sql, [item.id])
-        issue = dict()
-        issue['id']         = item.id
-        issue['text']       = item.title
-        issue['version']    = item.version
-        issue['count']      = count[0]['_num_']
-        issue['user_name']  = "无"
-        issue['status']     = "未处理"
-        issues.append(issue)
-        
-    return {
-        '__template__': 'issues.html',
-        'pages': pages,
-        'cur_page':cur_page,
-        'issues': issues
+        'issues': issues,
+        'users' : users,
+        'versions' : versions
     }
     
 @get('/my')
-async def my(request, *, page='1'):
-    users = await User.findAll()
-    count = await Issue.findNumber('count(id)', where=r"`user_id` = '%s'"%request.__user__.id )
+async def my(request, **kw):
+    page = kw.get('page', '1')
+    key = kw.get('key', 'id')
+    order = kw.get('order', 'asc')
+    version = kw.get('version', '0')
+    user = request.__user__.id
+    status = kw.get('status', '-1')
+    #AND issues.version = '%s' AND issues.user_id = '%s' AND issues.status = '%s'
+    
+    where = []
+    where.append('issues.id = crashs.issue_id')
+    if version != '0':
+        where.append(r"issues.version = '%s'"%version)
+    if user != '0':
+        where.append(r"issues.user_id = '%s'"%user)
+    
+    if status != '-1':
+        where.append(r"issues.status = '%s'"%status)
+        
+    where = " AND ".join(where)
+    
+    sql = r'''SELECT    COUNT(DISTINCT issues.id)  AS count
+      FROM      issues, crashs 
+      WHERE     %(where_append)s '''%{'where_append':where}
+    
+    raw = await orm.select(sql, None)
+    count = raw[0]['count']
     cur_page = get_page_index(page)
     pages = count // configs.page + 1
     
-    items = await Issue.findAll(where = r"`user_id` = '%s'"%(request.__user__.id), limit=((cur_page-1)*configs.page, configs.page) )
+    sql = r'''SELECT    issues.id AS id, 
+                issues.title AS title, 
+                COUNT(crashs.id) AS `count`, 
+                issues.version AS `version`, 
+                issues.user_id AS user_id, 
+                issues.status AS `status` 
+      FROM      issues, crashs 
+      WHERE     %(where_append)s 
+      GROUP BY  id 
+      ORDER BY  %(orderby_key)s %(orderby_value)s 
+      LIMIT     %(limit_min)d, %(limit_offset)d''' \
+      % {'where_append':where, 'orderby_key':key, 'orderby_value':order, 'limit_min':0, 'limit_offset':20}
+
+    items = await orm.select(sql, None)
+    
+    sql = "SELECT DISTINCT `version` FROM issues"
+    versions = await orm.select(sql, None)
+    users = await User.findAll(where="id = '%s'"%request.__user__.id)
+
     issues = list()
     for item in items:
-        sql = r"SELECT COUNT(*) _num_ FROM crashs WHERE issue_id = %s"
-        count = await orm.select(sql, [item.id])
         issue = dict()
-        issue['id']         = item.id
-        issue['text']       = item.title
-        issue['version']    = item.version
-        issue['count']      = count[0]['_num_']
-        issue['user_name']  = request.__user__.name
-        if item.status == 0:
+        issue['id']         = item['id']
+        issue['text']       = item['title']
+        issue['version']    = item['version']
+        issue['count']      = item['count']
+        if item['user_id'] == None:
+            issue['user_name']  = "无"
+        else:
+            name = '无'
+            for user in users:
+                if user.id == item['user_id']:
+                    name = user.name
+                    break  
+            issue['user_name']  = name
+            
+        if item['status'] == 0:
+            issue['status']     = "未处理"
+        elif item['status'] == 1:
             issue['status']     = "处理中"
-        elif item.status == 1:
+        elif item['status'] == 2:
             issue['status']     = "已解决"
         issues.append(issue)
-        
+    
     return {
         '__template__': 'issues.html',
         'pages': pages,
         'cur_page':cur_page,
-        'issues': issues
+        'issues': issues,
+        'users' : users,
+        'versions' : versions
     }
 
 @get('/issue/{id}')
@@ -186,9 +255,9 @@ async def issue(request, *, id):
         if request.__user__ == None or issue.user_id != request.__user__.id:
             user_name = '无'
             handle_type = 3
-            if issue.status == 0:
+            if issue.status == 1:
                 status = "处理中"
-            elif issue.status == 1:
+            elif issue.status == 2:
                 status = "已解决"
             for user in users:
                 if user.id == issue.user_id:
@@ -196,10 +265,10 @@ async def issue(request, *, id):
                     break  
         else:
             user_name = request.__user__.name
-            if issue.status == 0:
+            if issue.status == 1:
                 status = "处理中"
                 handle_type = 1
-            elif issue.status == 1:
+            elif issue.status == 2:
                 status = "已解决"
                 handle_type = 2
     
@@ -341,14 +410,14 @@ async def api_issue_op(request, *, issue_id, op):
     if op == 0:
         if issue.user_id == None:
             issue.user_id = request.__user__.id
-            issue.status = 0
+            issue.status = 1
             await issue.update()
         else:
             raise APIValueError('op', 'issue状态有变化，请刷新页面')
     # 解决
     elif op == 1:
         if issue.user_id == request.__user__.id:
-            issue.status = 1
+            issue.status = 2
             await issue.update()
     # 放弃
     elif op == 2:
@@ -359,7 +428,7 @@ async def api_issue_op(request, *, issue_id, op):
     # 重开
     elif op == 3:
         if issue.user_id == request.__user__.id:
-            issue.status = 0
+            issue.status = 1
             await issue.update()
     
     return { 'status' : 200 }

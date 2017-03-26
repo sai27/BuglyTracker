@@ -5,29 +5,207 @@
 {% block beforehead %}
 
 <script>
+function GetUrlParms()    
+{
+    var args=new Object();   
+    var query=location.search.substring(1);//获取查询串   
+    var pairs=query.split("&");//在逗号处断开   
+    for(var i=0;i<pairs.length;i++)   
+    {   
+        var pos=pairs[i].indexOf('=');//查找name=value   
+        if(pos==-1)   continue;//如果没有找到就跳过   
+        var argname=pairs[i].substring(0,pos);//提取name   
+        var value=pairs[i].substring(pos+1);//提取value   
+        args[argname]=unescape(value);//存为属性   
+    }
+    return args;
+}
+
+function objectToQueryString(args)
+{
+    var query_str = ""
+    if (typeof (args)==='object') {
+        var arr = [];
+        $.each(args, function (k, v) {
+            arr.push(k + '=' + encodeURIComponent(v));
+        });
+        args = arr.join('&');
+        query_str = args
+    }
+    else if(typeof(args) ==='string')
+        query_str = args
+        
+    return "?"+query_str
+}
+
+$(function () {
+    var vm = new Vue({
+        el : '#vm',
+        data : {
+        },
+        methods : {
+            on_id : function(e) {
+                args = GetUrlParms()
+                var key = args['key']
+                if (key === "id")
+                {
+                    var order = args['order']
+                    if (order === "desc")
+                    {
+                        args["order"] = "asc"
+                    }
+                    else
+                    {
+                        args["order"] = "desc"
+                    }
+                }
+                else
+                {
+                    args["key"] = "id"
+                    args["order"] = "desc"
+                }
+                window.location.href = objectToQueryString(args)
+            },
+            on_count : function(e) {
+                args = GetUrlParms()
+                var key = args['key']
+                if (key === "count")
+                {
+                    var order = args['order']
+                    if (order === "desc")
+                    {
+                        args["order"] = "asc"
+                    }
+                    else
+                    {
+                        args["order"] = "desc"
+                    }
+                }
+                else
+                {
+                    args["key"] = "count"
+                    args["order"] = "desc"
+                }
+                window.location.href = objectToQueryString(args)
+            },
+            on_version : function(e) {
+                args = GetUrlParms()
+                args['version'] = e.target.id
+                window.location.href = objectToQueryString(args)
+            },
+            on_user : function(e) {
+                args = GetUrlParms()
+                args['user'] = e.target.id
+                window.location.href = objectToQueryString(args)
+            },
+            on_status : function(e) {
+                args = GetUrlParms()
+                args['status'] = e.target.id
+                window.location.href = objectToQueryString(args)
+            },
+            on_page : function(e) {
+                args = GetUrlParms()
+                args['page'] = e.target.id
+                window.location.href = objectToQueryString(args)
+            }
+        }
+    });
+    $('#vm').show();
+})
+
+$(function () {
+    <!-- <i class="uk-icon-caret-down"> </i> -->
+    args = GetUrlParms()
+    key = args["key"]
+    order = args["order"]
+    if (key === "id")
+    {
+        if (order === "desc")
+        {
+            $("#id").attr("class", "uk-button uk-button-danger");
+        }
+        else if (order === "asc")
+        {
+            $("#id").attr("class", "uk-button uk-button-success");
+        }
+        
+    }
+    else if(key === "count")
+    {
+    if (order === "desc")
+        {
+            $("#count").attr("class", "uk-button uk-button-danger");
+        }
+        else if (order === "asc")
+        {
+            $("#count").attr("class", "uk-button uk-button-success");
+        }
+    }
+})
 </script>
 
 {% endblock %}
 
 {% block content %}
 
-    <div class="uk-width-1-1" >
+    <div id="vm" class="uk-width-1-1" >
         <table class="uk-table uk-table-hover">
             <thead>
                 <tr>
-                    <th class="uk-width-1-10">编号</th>
+                    <th class="uk-width-1-10">
+                        <button id="id" class="uk-button" type="button" v-on="click:on_id">编号</button></i>
+                    </th>
                     <th class="uk-width-5-10">摘要</th>
-                    <th class="uk-width-1-10">发生次数</th>
-                    <th class="uk-width-1-10">版本号</th>
-                    <th class="uk-width-1-10">处理人</th>
-                    <th class="uk-width-2-10">状态</th>
+                    <th class="uk-width-1-10">
+                        <button id= "count" class="uk-button" type="button" v-on="click:on_count">发生次数</button>
+                    </th>
+                    <th class="uk-width-1-10">
+                        <div class="uk-button-dropdown" data-uk-dropdown>
+                            <button class="uk-button">版本号<i class="uk-icon-caret-down"> </i></button>
+                            <div class="uk-dropdown uk-dropdown-small">
+                                <ul class="uk-nav uk-nav-dropdown">
+                                    <li><a id = "0" v-on="click:on_version">全部</a></li>
+                                    {% for version in versions %}
+                                    <li><a id = {{version.version}} v-on="click:on_version">{{version.version}}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </th>
+                    <th class="uk-width-1-10">
+                        <div class="uk-button-dropdown" data-uk-dropdown>
+                            <button class="uk-button">处理人<i class="uk-icon-caret-down"> </i></button>
+                            <div class="uk-dropdown uk-dropdown-small">
+                                <ul class="uk-nav uk-nav-dropdown">
+                                    <li><a id = "0" v-on="click:on_user">全部</a></li>
+                                    {% for user in users %}
+                                    <li><a id = {{user.id}} v-on="click:on_user">{{user.name}}</a></li>
+                                    {% endfor %}
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                    </th>
+                    <th class="uk-width-2-10">
+                        <div class="uk-button-dropdown" data-uk-dropdown>
+                            <button class="uk-button">状态<i class="uk-icon-caret-down"> </i></button>
+                            <div class="uk-dropdown uk-dropdown-small">
+                                <ul class="uk-nav uk-nav-dropdown">
+                                    <li><a id = "-1" v-on="click:on_status">全部</a></li>
+                                    <li><a id = "0" v-on="click:on_status">未处理</a></li>
+                                    <li><a id = "1" v-on="click:on_status">处理中</a></li>
+                                    <li><a id = "2" v-on="click:on_status">已解决</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody>
               {% for issue in issues %}
               <tr>
                 <td>
-                    <a href='/issue/{{issue.id}}'>{{issue.id}}</a>
+                    <a target="_blank" href='/issue/{{issue.id}}'>{{issue.id}}</a>
                 </td>
                 <td>
                     {% if issue.status == "未处理" %}
@@ -60,7 +238,7 @@
             {% if idx+1 == cur_page %}
             <li class="uk-active"><span>{{idx+1}}</span></li>
             {% else %}
-            <li ><a href='?page={{idx+1}}'>{{idx+1}}</a></li>
+            <li ><a id = {{idx+1}} v-on="click:on_page">{{idx+1}}</a></li>
             {% endif %}
         {% endfor %}
         </ul>
