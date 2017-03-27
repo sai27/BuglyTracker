@@ -113,7 +113,7 @@ async def index(**kw):
       GROUP BY  id 
       ORDER BY  %(orderby_key)s %(orderby_value)s 
       LIMIT     %(limit_min)d, %(limit_offset)d''' \
-      % {'where_append':where, 'orderby_key':key, 'orderby_value':order, 'limit_min':0, 'limit_offset':20}
+      % {'where_append':where, 'orderby_key':key, 'orderby_value':order, 'limit_min':(cur_page-1)*configs.page, 'limit_offset':configs.page}
 
     items = await orm.select(sql, None)
     
@@ -197,7 +197,7 @@ async def my(request, **kw):
       GROUP BY  id 
       ORDER BY  %(orderby_key)s %(orderby_value)s 
       LIMIT     %(limit_min)d, %(limit_offset)d''' \
-      % {'where_append':where, 'orderby_key':key, 'orderby_value':order, 'limit_min':0, 'limit_offset':20}
+      % {'where_append':where, 'orderby_key':key, 'orderby_value':order, 'limit_min':(cur_page-1)*configs.page, 'limit_offset':configs.page}
 
     items = await orm.select(sql, None)
     
